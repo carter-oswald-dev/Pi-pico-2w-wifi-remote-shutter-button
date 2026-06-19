@@ -4,23 +4,20 @@ import time
 from machine import Pin
 
 # -- Pin setup --
-# GP0 briefly pulled LOW = shorts Sleeve to GND = headphone button press
-shutter = Pin(0, Pin.OUT, value=1)  # stays HIGH (open circuit) normally
+shutter = Pin(0, Pin.OUT, value=1)
 
 # -- WiFi Access Point --
-AP_SSID     = "PicoShutter"
-AP_PASSWORD = "shutter123"
+AP_SSID = "PicoShutter"
 
 ap = network.WLAN(network.AP_IF)
 ap.active(True)
-ap.config(essid=AP_SSID, password=AP_PASSWORD, authmode=3)
+ap.config(ssid=AP_SSID, security=0)
 
 while not ap.active():
     time.sleep(0.1)
 
 print("Access point active")
 print("SSID:", AP_SSID)
-print("Password:", AP_PASSWORD)
 print("IP:", ap.ifconfig()[0])
 
 # -- Web page HTML --
@@ -98,9 +95,9 @@ ok
 """
 
 def fire_shutter():
-    shutter.value(0)   # pull LOW = short Mic to GND = button press
-    time.sleep_ms(100) # hold for 100ms
-    shutter.value(1)   # back HIGH = open circuit = button released
+    shutter.value(0)
+    time.sleep_ms(100)
+    shutter.value(1)
     print("Shutter fired")
 
 # -- Web server --
